@@ -7,7 +7,7 @@
 
 
   <!-- Begin Jekyll SEO tag v2.7.1 -->
-  <title>DualVC: Dual-mode Voice Conversion using Intra-model Knowledge Distillation and Hybrid Predictive Coding</title>
+  <title>DualVC 2: Dynamic Masked Convolution for Unified Streaming and Non-Streaming Voice Conversion</title>
   <meta name="generator" content="Jekyll v3.9.0">
   <meta property="og:title" content="TODO: title">
   <meta property="og:locale" content="en_US">
@@ -29,22 +29,23 @@
 
   <section class="main-content">
     <h1 id="">
-      <center>DualVC: Dual-mode Voice Conversion using Intra-model Knowledge Distillation and Hybrid Predictive Coding</center>
+      <center>DualVC 2: Dynamic Masked Convolution for Unified Streaming and Non-Streaming Voice Conversion</center>
     </h1>
 
-    <h3 id="">
-    <center>Ziqian Ning<sup>1, 2</sup>, Yuepeng Jiang<sup>1</sup>, Pengcheng Zhu<sup>2</sup>, Jixun Yao<sup>1</sup>, Shuai Wang<sup>3</sup>, Lei Xie<sup>1</sup>, Mengxiao Bi<sup>2</sup></center>
-    <center><sup>1</sup>Audio, Speech and Language Processing Group (ASLP@NPU), School of Computer Science, Northwestern Polytechnical University, Xi'an, China</center>
-    <center><sup>2</sup>Fuxi AI Lab, NetEase Inc., Hangzhou, China</center>
-    <center><sup>3</sup>Shanghai Jiao Tong University, Shanghai, China</center>
-    </h3>
-    <center>Accepted by INTERSPEECH 2023</center>
-
+    <center>Ziqian Ning<sup>1, 2</sup>, Yuepeng Jiang<sup>1</sup>, Pengcheng Zhu<sup>2</sup>, Shuai Wang<sup>3</sup>, Jixun Yao<sup>1</sup>, Lei Xie<sup>1</sup>, Mengxiao Bi<sup>2</sup></center>
+    <center><sup>1</sup>Audio, Speech and Language Processing Group (ASLP@NPU), School of Computer Science,</center>
+    <center>Northwestern Polytechnical University, Xi'an, China </center>
+    <center><sup>2</sup>Fuxi AI Lab, NetEase Inc., Hangzhou, China </center>
+    <center><sup>3</sup>Shenzhen Research Institute of Big Data,</center>
+    <center>The Chinese University of Hong Kong, Shenzhen (CUHK-Shenzhen), China</center>
 
     <br><br>
     <h2 id="abstract">1. Abstract<a name="abstract"></a></h2>
-    <p>Voice conversion is an increasingly popular technology, and the growing number of real-time applications requires models with streaming conversion capabilities. Unlike typical (non-streaming) voice conversion, which can leverage the entire utterance as full context, streaming voice conversion faces significant challenges due to the missing future information, resulting in degraded intelligibility, speaker similarity, and sound quality. To address this challenge, we propose <b>DualVC</b>, a dual-mode neural voice conversion approach that supports both streaming and non-streaming modes using jointly trained separate network parameters. Furthermore, we propose intra-model knowledge distillation and hybrid predictive coding (HPC) to enhance the performance of streaming conversion.
-      Additionally, we incorporate data augmentation to train a noise-robust autoregressive decoder, improving the model's performance on long-form speech conversion. Experimental results demonstrate that the proposed model outperforms the baseline models in the context of streaming voice conversion, while maintaining comparable performance to the non-streaming topline system that leverages the complete context, albeit with a latency of only 252.8 ms.</p>
+    <p>Voice conversion is becoming increasingly popular, and a growing number of application scenarios require models with streaming inference capabilities. The recently proposed DualVC attempts to achieve this objective through streaming model architecture design and intra-model knowledge distillation along with hybrid predictive coding to compensate for the lack of future information. 
+      However, DualVC encounters several problems that limit its performance. First, the autoregressive decoder has error accumulation in its nature and limits the inference speed as well. Second, the causal convolution enables streaming capability but cannot sufficiently use future information within chunks. Third, the model is unable to effectively address the noise in the unvoiced segments, lowering the sound quality.
+In this paper, we propose DualVC 2 to address these issues. Specifically, the model backbone is migrated to a Conformer-based architecture, empowering parallel inference. Causal convolution is replaced by non-causal convolution with dynamic chunk mask to make better use of within-chunk future information. Also, quiet attention is introduced to enhance the model's noise robustness.
+Experiments show that DualVC 2 outperforms DualVC and other baseline systems in both subjective and objective metrics, with only 186.4 ms latency.
+    </p>
 
     <table frame=void rules=none>
       <tr>
@@ -55,22 +56,30 @@
     </table>
     <br><br>
 
+    <h2 id="abstract">2. Demo -- actual scenario<a name="abstract"></a></h2>
+    </br>
+    <center>
+    <video width="640" controls>
+      <source src="raw/demo.mp4" type="video/mp4">
+    </video>
+    </center>
 
-    <h2>2. Demos -- Voice Conversion<a name="Comparison"></a></h2>
+    <h2>3. Demo  -- Recordings<a name="Comparison"></a></h2>
     <ul>
-      <li>Bottomline: Replace all convolution layers in the backbone model [1] with the causal version to create a naïve streaming implementation.</li>
+      <li>DualVC nonstreaming: Non-streaming mode of our previous proposed model [1] .</li>
+      <li>DualVC streaming: Streaming mode of our previous proposed model [1] .</li>
       <li>IBF-VC: Reinplement [2] using the backbone model.</li>
-      <li>Topline: Use the unmodified Backbone model which leverage full-context, but input BNF is extracted from a streaming ASR encoder.</li>
-      <li>DualVC-nonstreaming: Non-streaming mode of our proposed DualVC.</li>
-      <li>DualVC-streaming: Streaming mode of our proposed DualVC.</li>
+      <li>DualVC 2 nonstreaming: Non-streaming mode of DualVC 2.</li>
+      <li>DualVC 2 streaming: Streaming mode of DualVC 2.</li>
     </ul>
 
     <table>
       <tbody id="tbody">
       </tbody>
     </table> 
+
     </br>
-    <cite>[1] X. Tian, Z. Wang, S. Yang, X. Zhou, H. Du, Y. Zhou, M. Zhang, K. Zhou, B. Sisman, L. Xie et al., “The nus & nwpu system for voice conversion challenge 2020,” in Proc. Joint Workshop for the Blizzard Challenge and Voice Conversion Challenge 2020, 2020, pp. 170–17</cite>
+    <cite>[1] Z. Ning, Y. Jiang, P. Zhu, J. Yao, S. Wang, L. Xie, and M. Bi, “Dualvc: Dual-mode voice conversion using intra-model knowledge distillation and hybrid predictive coding,” CoRR, vol. abs/2305.12425, 2023.</cite>
     </br>
     <cite>[2] Y. Chen, M. Tu, T. Li, X. Li, Q. Kong, J. Li, Z. Wang, Q. Tian, Y. Wang, and Y. Wang, “Streaming voice conversion via intermediate bottleneck features and non-streaming teacher guidance,” CoRR, vol. abs/2210.15158, 202</cite>
   </section>
@@ -81,13 +90,11 @@
 <script type="" text/javascript>
   window.onload = function () {
     let scenes = ["Clean", "Noisy"]
-    let speakers = ["db_1", "M2VoC_male", "SSB1956", "SSB0273"]
-    //let speakers = ["db_1", "M2VoC_male"]
-    //let genders = ["female", "male"]
-    let genders = ["female", "male", "aishell female", "aishell male"]
-    let models = ["Bottomline", "Baseline", "Topline", "DualVC-nonstreaming", "DualVC-streaming"]
-    let all_samples = [["1.wav", "4.wav", "biaobei_8315010.wav", "TenXiaozhi_007_000472.wav"], 
-                    ["Y0000019527_oMwYDEEBw0g_S00489.wav", "Y0000019576_oVD68qz-Rrw_S00095.wav", "Y0000019686_omXo90yMpGc_S00895.wav", "Y0000019687_omf0WUsolCc_S00328.wav"]]
+    let speakers = ["female", "male"]
+    let genders = ["female", "male"]
+    let models = ["IBF-VC", "DualVC-nonstreaming", "DualVC-streaming", "DualVC2-nonstreaming", "DualVC2-streaming"]
+    let all_samples = [["2.wav", "biaobei_8316010.wav", "iqiyi_700_700623.wav", "robo100_068_068349.wav"], 
+                    ["Y0000019527_oMwYDEEBw0g_S00489.wav", "Y0000019576_oVD68qz-Rrw_S00095.wav", "Y0000019687_omf0WUsolCc_S00328.wav", "Y0000019715_orYS2WEgb1o_S00100.wav"]]
     let sample_data = `
         <tr>
           <td style="text-align: center; width: 150px;" rowspan=2><strong>Scenario<strong></td>
@@ -111,7 +118,7 @@
       let scene = scenes[x]
       let scene_data = ""
       scene_data += '<tr>'
-      scene_data += '<td style="text-align: center; width: 150px;" rowspan=' + 16 + '><strong>' + scene + ' Source' + '<strong></td>'
+      scene_data += '<td style="text-align: center; width: 150px;" rowspan=' + 8 + '><strong>' + scene + ' Source' + '<strong></td>'
       let samples = all_samples[x]
       console.log(scene, samples)
       for (let y in speakers) {
@@ -126,13 +133,7 @@
           scene_data += '<td style="text-align: center"><audio style="width: 150px;" controls="" src="raw/samples/' + scene + '/source/' + sample + '"></audio></td>'
           for (let w in models) {
             let model = models[w]
-            console.log(speaker + model)
-            if ((speaker == "SSB1956" || speaker == "SSB0273") && (model != "DualVC-streaming" && model != "DualVC-nonstreaming")) {
-              console.log("!!!")
-              scene_data += '<td style="text-align: center"><p>N/A</p></td>'
-            } else {
-              scene_data += '<td style="text-align: center"><audio style="width: 150px;" controls="" src="raw/samples/' + scene + '/' + model + '/' + speaker + '/' + sample + '"></audio></td>'
-            }
+            scene_data += '<td style="text-align: center"><audio style="width: 150px;" controls="" src="raw/samples/' + scene + '/' + model + '/' + speaker + '/' + sample + '"></audio></td>'
           }
           scene_data += '</tr>'
         }
